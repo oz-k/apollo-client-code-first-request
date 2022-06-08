@@ -1,6 +1,6 @@
 import { Field } from 'src/decorators';
 import { createGql } from 'src/utils';
-import { DateScalar, DollarScalar } from './__mocks__';
+import { DateScalar, DollarScalar } from '../__mocks__';
 
 describe('createGql', () => {
     it('request.args의 값이 중첩오브젝트, 배열도 정상적으로 직렬화된 후 쿼리화되어야함', () => {

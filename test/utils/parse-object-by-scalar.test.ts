@@ -1,6 +1,6 @@
 import { Field } from 'src/decorators';
 import { parseObjectByScalar } from 'src/utils';
-import { DateScalar, DollarScalar } from './__mocks__';
+import { DateScalar, DollarScalar } from '../__mocks__';
 
 describe('parseObjectByScalar', () => {
     it('scalar가 지정된 프로퍼티는 파싱되어 반환되어야함', () => {
