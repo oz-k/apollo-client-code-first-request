@@ -1,5 +1,5 @@
-import { Field } from 'src/decorators';
-import { Type } from 'src/interfaces';
+import { Field } from '../decorators';
+import { Type } from '../interfaces';
 import { Metadata } from '../utils';
 import { inheritPropertyInitializers } from './type-helpers.util';
 

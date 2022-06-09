@@ -1,5 +1,5 @@
-import { FieldInfo, FieldOptions } from 'src/interfaces';
-import { Metadata } from 'src/utils';
+import { FieldInfo, FieldOptions } from '../interfaces';
+import { Metadata } from '../utils';
 
 function getFieldTypeAndIsArray(
     target: Record<string, any>,
