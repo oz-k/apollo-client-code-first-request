@@ -1,4 +1,4 @@
-import { Type } from 'src/interfaces';
+import { Type } from '../interfaces';
 
 export function inheritPropertyInitializers(
     target: Record<string, any>,

@@ -1,4 +1,4 @@
-import { Query } from 'src/interfaces';
+import { Query } from '../interfaces';
 import { parseObjectByScalar } from './parse-object-by-scalar.util';
 
 /** 

@@ -1,4 +1,4 @@
-import type { Type } from 'src/interfaces';
+import type { Type } from '../interfaces';
 import { Metadata } from './metadata.util';
 
 /**
