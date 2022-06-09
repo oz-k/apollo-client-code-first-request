@@ -1,4 +1,4 @@
-import { Type } from 'src/interfaces';
+import { Type } from '../interfaces';
 
 export function PartialType<T>(
     classRef: Type<T>,

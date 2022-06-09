@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { FIELD_METADATA, PROPERTY_NAMES_METADATA } from 'src/constants';
-import { FieldInfo } from 'src/interfaces';
+import { FIELD_METADATA, PROPERTY_NAMES_METADATA } from '../constants';
+import { FieldInfo } from '../interfaces';
 
 export class Metadata {
     static getType(target: any, propertyKey?: string | symbol) {
