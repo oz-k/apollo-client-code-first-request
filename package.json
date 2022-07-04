@@ -1,10 +1,9 @@
 {
     "name": "apollo-client-code-first-request",
-    "version": "1.0.10",
+    "version": "1.2.0",
     "description": "",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
-    "type": "module",
     "scripts": {
         "test": "jest",
         "test:watch": "jest --watch",

@@ -51,4 +51,18 @@ describe('PickType', () => {
             scalar: DollarScalar,
         });
     });
+
+    it('상속된 클래스에 생성자가 존재해야함', () => {
+        class Parent {
+            @Field()
+            prop1: string;
+
+            @Field()
+            prop2: number;
+        }
+
+        class Child extends PickType(Parent, ['prop1'] as const) {}
+
+        expect(new Child()).toBeDefined();
+    });
 });

@@ -1,5 +1,5 @@
 import { ApolloClient, gql, MutationOptions, QueryOptions, SubscriptionOptions } from '@apollo/client';
-import { ApolloFetchOptions, ApolloFetchResult, FetchType, Query } from './interfaces';
+import { ApolloFetchOptions, ApolloFetchResult, FetchType, Query, ResponseRef } from './interfaces';
 import { createGql } from './utils';
 import { parseApolloResponseData } from './utils/parse-apollo-response-data.util';
 
@@ -11,11 +11,20 @@ export class ApolloClientCodeFirstRequest {
     static addQuery<
         N extends string,
         A extends Record<string, any>,
-        R extends Record<string, any>,
+        R extends ResponseRef,
         Q extends Query<N, A, R>,
     >(...queries: Query<N, A, R>[]) {
         return {
-            addQuery: <N2 extends string, A2 extends Record<string, any>, R2 extends Record<string, any>>(...queries2: Query<N2, A2, R2>[]) => this.addQuery<N | N2, A | A2, R | R2, typeof queries[number] | typeof queries2[number]>(...queries, ...queries2),
+            addQuery: <
+                N2 extends string,
+                A2 extends Record<string, any>,
+                R2 extends ResponseRef,
+            >(...queries2: Query<N2, A2, R2>[]) => this.addQuery<
+                N | N2,
+                A | A2,
+                R | R2,
+                Q | typeof queries2[number]
+            >(...queries, ...queries2),
             fetch: async <T extends FetchType>(
                 type: T,
                 apolloClient: ApolloClient<any>,
@@ -32,15 +41,15 @@ export class ApolloClientCodeFirstRequest {
                     return {
                         ...response,
                         data: parseApolloResponseData<N, A, R>(queries, response.data),
-                    } as ApolloFetchResult<T, Q>;
+                    } as unknown as ApolloFetchResult<T, Q>;
                 }
                 if(type === 'mutate') {
                     const response = await apolloClient.mutate({...options as MutationOptions<any>, mutation: generatedGql});
 
                     return {
                         ...response,
-                        ...(response.data && {data: parseApolloResponseData<N, A, R>(queries, response.data)}),
-                    } as ApolloFetchResult<T, Q>;
+                        ...(response.data && { data: parseApolloResponseData<N, A, R>(queries, response.data) }),
+                    } as unknown as ApolloFetchResult<T, Q>;
                 }
                 if(type === 'subscribe') {
                     return apolloClient
@@ -48,9 +57,9 @@ export class ApolloClientCodeFirstRequest {
                         .map(response => {
                             return {
                                 ...response,
-                                ...(response.data && {data: parseApolloResponseData<N, A, R>(queries, response.data)}),
+                                ...(response.data && { data: parseApolloResponseData<N, A, R>(queries, response.data) }),
                             };
-                        }) as ApolloFetchResult<T, Q>;
+                        }) as unknown as ApolloFetchResult<T, Q>;
                 }
             },
         };

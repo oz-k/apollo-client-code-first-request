@@ -21,10 +21,6 @@ describe('createGql', () => {
             @Field({type: [RequestDepth2]})
             arg3: RequestDepth2[];
         }
-        class Response {
-            @Field()
-            prop1: string;
-        }
 
         const result = createGql({
             name: 'test',
@@ -45,10 +41,10 @@ describe('createGql', () => {
                     ],
                 },
             },
-            responseRef: Response,
+            responseRef: String,
         });
 
-        expect(result).toEqual('test(arg1: "test", arg2: [100, 200], arg3: [{arg1: "test1", arg2: "2020-01-01T00:00:00.000Z"}, {arg1: "test2", arg2: "2020-01-02T00:00:00.000Z"}]) {prop1}');
+        expect(result).toEqual('test(arg1: "test", arg2: [100, 200], arg3: [{arg1: "test1", arg2: "2020-01-01T00:00:00.000Z"}, {arg1: "test2", arg2: "2020-01-02T00:00:00.000Z"}]) ');
     });
 
     it('응답객체에 중첩오브젝트가 쿼리에 반영되어야함', () => {
@@ -98,5 +94,19 @@ describe('createGql', () => {
         });
 
         expect(result).toEqual('test {prop1 depth2 {prop1}}');
+    });
+
+    it('응답객체가 배열인 경우 배열의 0번째 타입으로 치환되어야함', () => {
+        class Response {
+            @Field()
+            prop1: string;
+        }
+
+        const result = createGql({
+            name: 'test',
+            responseRef: [Response],
+        });
+        
+        expect(result).toEqual('test {prop1}');
     });
 });

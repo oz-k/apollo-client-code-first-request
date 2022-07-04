@@ -1,4 +1,4 @@
-import { Query } from '../interfaces';
+import { Query, ResponseRef, Type } from '../interfaces';
 import { parseObjectByScalar } from './parse-object-by-scalar.util';
 
 /** 
@@ -8,14 +8,31 @@ import { parseObjectByScalar } from './parse-object-by-scalar.util';
 export function parseApolloResponseData<
     N extends string,
     A extends Record<string, any>,
-    R extends Record<string, any>,
->(queries: Query<N, A, R>[], data: Record<N, Record<keyof R, any>>) {
+    R extends ResponseRef,
+>(queries: Query<N, A, R>[], data: Record<N, Record<keyof R, any>> | Record<N, Record<keyof R, any>[]>) {
     return (Object.keys(data) as N[]).reduce((prev, curr) => {
         const query = queries.find(({name}) => name === curr);
         if(!query) return prev;
 
-        prev[curr] = parseObjectByScalar(query.responseRef, data[curr]);
+        if(Array.isArray(data[curr]) !== Array.isArray(query.responseRef)) {
+            throw new Error('responseRef must be Array when response is Array.');
+        }
+
+        if(Array.isArray(data[curr])) {
+            prev[curr] = (data[curr] as Record<keyof R, any>[])
+                .map(item => (
+                    parseObjectByScalar<Record<string, any>>(
+                        query.responseRef[0] as Type<Record<string, any>>,
+                        item,
+                    )
+                )) as R extends [Type<infer S>] ? S[] : never;
+        } else {
+            prev[curr] = parseObjectByScalar<Record<string, any>>(
+                query.responseRef as Type<Record<string, any>>,
+                data[curr],
+            ) as R extends [Type<infer S>] ? S[] : R extends Type<infer T> ? T : never;
+        }
 
         return prev;
-    }, {} as Record<N, R>);
+    }, {} as Record<N, R extends [Type<infer S>] ? S[] : R extends Type<infer T> ? T : never>);
 }

@@ -56,13 +56,14 @@ function createGqlArgument(request?: Query<any, any, any>['request']) {
  * gql query 중 응답 시 받을 필드 정의부를 만드는 함수
  * @returns ex) '{field1 field2}'
  */
-function createGqlBody(responseRef: Type<any>): string {
-    const propertyNames = Metadata.getPropertyNames(responseRef.prototype);
+function createGqlBody(responseRef: Type<any> | [Type<any>]): string {
+    const resRef: Type<any> = Array.isArray(responseRef) ? responseRef[0] : responseRef;
+    const propertyNames = Metadata.getPropertyNames(resRef.prototype);
     if(!propertyNames.length) return '';
         
     const body = propertyNames
         .reduce((prev, curr) => {
-            const { type } = Metadata.getFieldInfo(responseRef.prototype, curr);
+            const { type } = Metadata.getFieldInfo(resRef.prototype, curr);
             const nestedField = createGqlBody(type);
 
             return `${prev}${curr} ${nestedField ? `${nestedField} ` : ''}`;
