@@ -79,4 +79,28 @@ describe('parseObjectByScalar', () => {
             },
         });
     });
+
+    it('중간 depth가 optional인 중첩객체가 정상적으로 파싱되어야함', () => {
+        class Privacy {
+            @Field()
+            name: string;
+        }
+        class User {
+            @Field()
+            nickname: string;
+
+            @Field()
+            privacy?: Privacy;
+        }
+
+        const result = parseObjectByScalar(User, {
+            nickname: 'John',
+            privacy: null,
+        });
+
+        expect(result).toEqual({
+            nickname: 'John',
+            privacy: undefined,
+        });
+    });
 });

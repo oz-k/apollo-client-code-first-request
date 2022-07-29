@@ -16,7 +16,8 @@ export function parseObjectByScalar<
     propertyNames.forEach(propertyName => {
         const {type, isArray, scalar} = Metadata.getFieldInfo(classRef.prototype, propertyName as string);
 
-        const propertyValues: any[] = isArray ? [...object[propertyName]] : [object[propertyName]];
+        const propertyValue = object?.[propertyName];
+        const propertyValues: any[] = isArray ? [...(propertyValue || [])] : propertyValue ? [propertyValue] : [];
 
         propertyValues.forEach((value, index) => {
             propertyValues[index] = parseObjectByScalar(type, value);
