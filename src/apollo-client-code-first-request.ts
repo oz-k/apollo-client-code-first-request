@@ -43,7 +43,7 @@ export class ApolloClientCodeFirstRequest {
                         data: parseApolloResponseData<N, A, R>(queries, response.data),
                     } as unknown as ApolloFetchResult<T, Q>;
                 }
-                if(type === 'mutate') {
+                if(type === 'mutation') {
                     const response = await apolloClient.mutate({...options as MutationOptions<any>, mutation: generatedGql});
 
                     return {

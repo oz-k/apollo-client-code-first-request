@@ -1,12 +1,12 @@
 import { ApolloQueryResult, FetchResult, MutationOptions, Observable, QueryOptions, SubscriptionOptions } from '@apollo/client';
 import { Query, QueryResult } from './query.interface';
 
-export type FetchType = 'query' | 'mutate' | 'subscribe';
+export type FetchType = 'query' | 'mutation' | 'subscribe';
 
 // 쿼리타입에 따른 분기타입
 export type BranchByFetchType<T extends FetchType, Q, M, S> = T extends 'query'
     ? Q
-    : T extends 'mutate'
+    : T extends 'mutation'
         ? M
         : T extends 'subscribe'
             ? S
